@@ -1,0 +1,9 @@
+{
+  "expected_rows": 52,
+  "actual_rows": 52,
+  "failed_rows": 0,
+  "status": "passed",
+  "total_runtime_seconds": 30.13614354596939,
+  "model_load_runtime_ms": 243.33094793837517,
+  "raw_sha256": "9e6572f39d5df80421682ad86611d01faa8bd13e347126e9b0fd888f9cfd1328"
+}

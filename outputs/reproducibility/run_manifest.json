@@ -1,0 +1,109 @@
+{
+  "run_id": "20260905T233251.794111Z",
+  "git_commit": "3a1ad8dfa458b46fc17f0ade0b5f23d3607a71f1",
+  "git_status": " M STATUS.md\n?? outputs/logs/initial_commit.log\n?? outputs/logs/inspect_pilot.log\n?? outputs/logs/pilot.log\n?? outputs/logs/reproducibility.log\n?? outputs/pilot/\n",
+  "code_sha256": "4858edc00fd66503cce1a954f2d6d0f4d53228f58f3723839b191aace47c4780",
+  "manifest_sha256": "85a65f1f57cd5918e3529a1210a45ad78cb20cab8a6db637589aecc38e333336",
+  "configuration_sha256": "15cd64de2c8ddb012c7001ab2b9d14b9009c3f6c85d26ac718ef884459e419c7",
+  "config": {
+    "seed": 20260905,
+    "sample_rate": 16000,
+    "num_clips": 24,
+    "num_speakers": 12,
+    "clips_per_speaker": 2,
+    "min_duration_seconds": 2,
+    "max_duration_seconds": 10,
+    "device": "cpu",
+    "torch_threads": 4,
+    "generator": "audioseal_wm_16bits",
+    "detector": "audioseal_detector_16bits",
+    "watermark_strength": 1.0,
+    "frame_threshold": 0.5,
+    "detector_threshold": 0.5,
+    "message_threshold": 0.5,
+    "bootstrap_resamples": 2000,
+    "manifest": "data/manifests/evaluation_manifest.csv",
+    "attacks_config": "configs/attacks.yaml"
+  },
+  "conditions": [
+    {
+      "id": "clean",
+      "family": "clean"
+    },
+    {
+      "id": "mp3_128",
+      "family": "mp3",
+      "bitrate_kbps": 128
+    },
+    {
+      "id": "mp3_64",
+      "family": "mp3",
+      "bitrate_kbps": 64
+    },
+    {
+      "id": "noise_30",
+      "family": "noise",
+      "snr_db": 30
+    },
+    {
+      "id": "noise_20",
+      "family": "noise",
+      "snr_db": 20
+    },
+    {
+      "id": "resample_12000",
+      "family": "resample",
+      "intermediate_sr": 12000
+    },
+    {
+      "id": "resample_8000",
+      "family": "resample",
+      "intermediate_sr": 8000
+    },
+    {
+      "id": "pitch_minus2",
+      "family": "pitch",
+      "semitones": -2
+    },
+    {
+      "id": "pitch_plus2",
+      "family": "pitch",
+      "semitones": 2
+    },
+    {
+      "id": "stretch_09",
+      "family": "stretch",
+      "rate": 0.9
+    },
+    {
+      "id": "stretch_11",
+      "family": "stretch",
+      "rate": 1.1
+    },
+    {
+      "id": "crop_10",
+      "family": "crop",
+      "fraction": 0.1
+    },
+    {
+      "id": "crop_25",
+      "family": "crop",
+      "fraction": 0.25
+    }
+  ],
+  "clip_ids": [
+    "2961-961-0021",
+    "672-122797-0044"
+  ],
+  "command": [
+    "scripts/run_experiment.py",
+    "--limit",
+    "2",
+    "--output-dir",
+    "outputs/reproducibility",
+    "--save-audio",
+    "none"
+  ],
+  "timing_definition": "Wall time. Model loading and warmup separate. Embed measured once per clip and repeated in condition rows; do not sum duplicated embed times. Attack includes codec I/O and first library imports. Quality/file-write time only in total wall time.",
+  "missing_value": "NA; see quality_applicability, branch and error_message"
+}

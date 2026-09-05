@@ -1,0 +1,5 @@
+/home/zak/docker_shared/audio_watermarking/audioseal-robustness/.venv/lib/python3.11/site-packages/torch/nn/utils/weight_norm.py:143: FutureWarning: `torch.nn.utils.weight_norm` is deprecated in favor of `torch.nn.utils.parametrizations.weight_norm`.
+  WeightNorm.apply(module, name, dim)
+clip 1/2 2961-961-0021: 0 failed rows so far
+clip 2/2 672-122797-0044: 0 failed rows so far
+{'expected_rows': 52, 'actual_rows': 52, 'failed_rows': 0, 'status': 'passed', 'total_runtime_seconds': 16.98460496298503, 'model_load_runtime_ms': 228.19350403733552, 'raw_sha256': '2a7b9cc2c983f4d6f72bfb14e039747927cf796bebefc352ac3c98a14aedbfe3'}

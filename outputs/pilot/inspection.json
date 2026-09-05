@@ -1,0 +1,324 @@
+{
+  "expected_rows": 52,
+  "actual_rows": 52,
+  "failed_rows": 0,
+  "status": "passed",
+  "audio_checks": [
+    {
+      "file": "outputs/pilot/audio_examples/2961-961-0021_clean_positive.wav",
+      "rms": 0.031812251677502616,
+      "peak": 0.4376334846019745,
+      "samples": 79040
+    },
+    {
+      "file": "outputs/pilot/audio_examples/2961-961-0021_clean_negative.wav",
+      "rms": 0.031897160265905486,
+      "peak": 0.430023193359375,
+      "samples": 79040
+    },
+    {
+      "file": "outputs/pilot/audio_examples/2961-961-0021_mp3_128_positive.wav",
+      "rms": 0.03010848372294861,
+      "peak": 0.4157027304172516,
+      "samples": 79040
+    },
+    {
+      "file": "outputs/pilot/audio_examples/2961-961-0021_mp3_128_negative.wav",
+      "rms": 0.03019040055458365,
+      "peak": 0.408852219581604,
+      "samples": 79040
+    },
+    {
+      "file": "outputs/pilot/audio_examples/2961-961-0021_mp3_64_positive.wav",
+      "rms": 0.030074285397824807,
+      "peak": 0.419128954410553,
+      "samples": 79040
+    },
+    {
+      "file": "outputs/pilot/audio_examples/2961-961-0021_mp3_64_negative.wav",
+      "rms": 0.03018740768578148,
+      "peak": 0.40483608841896057,
+      "samples": 79040
+    },
+    {
+      "file": "outputs/pilot/audio_examples/2961-961-0021_noise_30_positive.wav",
+      "rms": 0.03183172189724423,
+      "peak": 0.43722838163375854,
+      "samples": 79040
+    },
+    {
+      "file": "outputs/pilot/audio_examples/2961-961-0021_noise_30_negative.wav",
+      "rms": 0.031916775290760965,
+      "peak": 0.4296170175075531,
+      "samples": 79040
+    },
+    {
+      "file": "outputs/pilot/audio_examples/2961-961-0021_noise_20_positive.wav",
+      "rms": 0.03197548611599543,
+      "peak": 0.4381563067436218,
+      "samples": 79040
+    },
+    {
+      "file": "outputs/pilot/audio_examples/2961-961-0021_noise_20_negative.wav",
+      "rms": 0.03206134723529662,
+      "peak": 0.43054741621017456,
+      "samples": 79040
+    },
+    {
+      "file": "outputs/pilot/audio_examples/2961-961-0021_resample_12000_positive.wav",
+      "rms": 0.031510956109735075,
+      "peak": 0.43830743432044983,
+      "samples": 79040
+    },
+    {
+      "file": "outputs/pilot/audio_examples/2961-961-0021_resample_12000_negative.wav",
+      "rms": 0.03159668661257519,
+      "peak": 0.43068990111351013,
+      "samples": 79040
+    },
+    {
+      "file": "outputs/pilot/audio_examples/2961-961-0021_resample_8000_positive.wav",
+      "rms": 0.03103420599021726,
+      "peak": 0.43763020634651184,
+      "samples": 79040
+    },
+    {
+      "file": "outputs/pilot/audio_examples/2961-961-0021_resample_8000_negative.wav",
+      "rms": 0.03112158992226455,
+      "peak": 0.4300186336040497,
+      "samples": 79040
+    },
+    {
+      "file": "outputs/pilot/audio_examples/2961-961-0021_pitch_minus2_positive.wav",
+      "rms": 0.020153438001101653,
+      "peak": 0.15711766481399536,
+      "samples": 79040
+    },
+    {
+      "file": "outputs/pilot/audio_examples/2961-961-0021_pitch_minus2_negative.wav",
+      "rms": 0.020059476287720326,
+      "peak": 0.15902166068553925,
+      "samples": 79040
+    },
+    {
+      "file": "outputs/pilot/audio_examples/2961-961-0021_pitch_plus2_positive.wav",
+      "rms": 0.022178695684096653,
+      "peak": 0.21944564580917358,
+      "samples": 79040
+    },
+    {
+      "file": "outputs/pilot/audio_examples/2961-961-0021_pitch_plus2_negative.wav",
+      "rms": 0.022437964500476425,
+      "peak": 0.1983308494091034,
+      "samples": 79040
+    },
+    {
+      "file": "outputs/pilot/audio_examples/2961-961-0021_stretch_09_positive.wav",
+      "rms": 0.021133683794752,
+      "peak": 0.1867445856332779,
+      "samples": 87822
+    },
+    {
+      "file": "outputs/pilot/audio_examples/2961-961-0021_stretch_09_negative.wav",
+      "rms": 0.021462901601409137,
+      "peak": 0.19344311952590942,
+      "samples": 87822
+    },
+    {
+      "file": "outputs/pilot/audio_examples/2961-961-0021_stretch_11_positive.wav",
+      "rms": 0.020705115769451193,
+      "peak": 0.1752958595752716,
+      "samples": 71855
+    },
+    {
+      "file": "outputs/pilot/audio_examples/2961-961-0021_stretch_11_negative.wav",
+      "rms": 0.021230309916667533,
+      "peak": 0.19664235413074493,
+      "samples": 71855
+    },
+    {
+      "file": "outputs/pilot/audio_examples/2961-961-0021_crop_10_positive.wav",
+      "rms": 0.03353282550920297,
+      "peak": 0.4376334846019745,
+      "samples": 71136
+    },
+    {
+      "file": "outputs/pilot/audio_examples/2961-961-0021_crop_10_negative.wav",
+      "rms": 0.03362242639579928,
+      "peak": 0.430023193359375,
+      "samples": 71136
+    },
+    {
+      "file": "outputs/pilot/audio_examples/2961-961-0021_crop_25_positive.wav",
+      "rms": 0.0324476381359925,
+      "peak": 0.2696218192577362,
+      "samples": 59280
+    },
+    {
+      "file": "outputs/pilot/audio_examples/2961-961-0021_crop_25_negative.wav",
+      "rms": 0.03250683619012511,
+      "peak": 0.266021728515625,
+      "samples": 59280
+    },
+    {
+      "file": "outputs/pilot/audio_examples/672-122797-0044_clean_positive.wav",
+      "rms": 0.03850201597119235,
+      "peak": 0.2912736237049103,
+      "samples": 59840
+    },
+    {
+      "file": "outputs/pilot/audio_examples/672-122797-0044_clean_negative.wav",
+      "rms": 0.03851071452419941,
+      "peak": 0.291778564453125,
+      "samples": 59840
+    },
+    {
+      "file": "outputs/pilot/audio_examples/672-122797-0044_mp3_128_positive.wav",
+      "rms": 0.03656366503218931,
+      "peak": 0.27676913142204285,
+      "samples": 59840
+    },
+    {
+      "file": "outputs/pilot/audio_examples/672-122797-0044_mp3_128_negative.wav",
+      "rms": 0.03657214003638024,
+      "peak": 0.2770635187625885,
+      "samples": 59840
+    },
+    {
+      "file": "outputs/pilot/audio_examples/672-122797-0044_mp3_64_positive.wav",
+      "rms": 0.03655989438429556,
+      "peak": 0.278310090303421,
+      "samples": 59840
+    },
+    {
+      "file": "outputs/pilot/audio_examples/672-122797-0044_mp3_64_negative.wav",
+      "rms": 0.03656902498970613,
+      "peak": 0.27693551778793335,
+      "samples": 59840
+    },
+    {
+      "file": "outputs/pilot/audio_examples/672-122797-0044_noise_30_positive.wav",
+      "rms": 0.03851975950515485,
+      "peak": 0.29189032316207886,
+      "samples": 59840
+    },
+    {
+      "file": "outputs/pilot/audio_examples/672-122797-0044_noise_30_negative.wav",
+      "rms": 0.03852835975047571,
+      "peak": 0.2923954129219055,
+      "samples": 59840
+    },
+    {
+      "file": "outputs/pilot/audio_examples/672-122797-0044_noise_20_positive.wav",
+      "rms": 0.03866436883295223,
+      "peak": 0.2878054678440094,
+      "samples": 59840
+    },
+    {
+      "file": "outputs/pilot/audio_examples/672-122797-0044_noise_20_negative.wav",
+      "rms": 0.03867317944317993,
+      "peak": 0.28830963373184204,
+      "samples": 59840
+    },
+    {
+      "file": "outputs/pilot/audio_examples/672-122797-0044_resample_12000_positive.wav",
+      "rms": 0.03829859890398132,
+      "peak": 0.2912819981575012,
+      "samples": 59840
+    },
+    {
+      "file": "outputs/pilot/audio_examples/672-122797-0044_resample_12000_negative.wav",
+      "rms": 0.03830736774296699,
+      "peak": 0.2917883098125458,
+      "samples": 59840
+    },
+    {
+      "file": "outputs/pilot/audio_examples/672-122797-0044_resample_8000_positive.wav",
+      "rms": 0.037327020842600055,
+      "peak": 0.27955925464630127,
+      "samples": 59840
+    },
+    {
+      "file": "outputs/pilot/audio_examples/672-122797-0044_resample_8000_negative.wav",
+      "rms": 0.03733601991668779,
+      "peak": 0.2816774547100067,
+      "samples": 59840
+    },
+    {
+      "file": "outputs/pilot/audio_examples/672-122797-0044_pitch_minus2_positive.wav",
+      "rms": 0.026795524533187325,
+      "peak": 0.19390499591827393,
+      "samples": 59840
+    },
+    {
+      "file": "outputs/pilot/audio_examples/672-122797-0044_pitch_minus2_negative.wav",
+      "rms": 0.02713946804910157,
+      "peak": 0.20269782841205597,
+      "samples": 59840
+    },
+    {
+      "file": "outputs/pilot/audio_examples/672-122797-0044_pitch_plus2_positive.wav",
+      "rms": 0.02475782556302082,
+      "peak": 0.21233932673931122,
+      "samples": 59840
+    },
+    {
+      "file": "outputs/pilot/audio_examples/672-122797-0044_pitch_plus2_negative.wav",
+      "rms": 0.026369885837424917,
+      "peak": 0.17826201021671295,
+      "samples": 59840
+    },
+    {
+      "file": "outputs/pilot/audio_examples/672-122797-0044_stretch_09_positive.wav",
+      "rms": 0.02675209945147471,
+      "peak": 0.1821613907814026,
+      "samples": 66489
+    },
+    {
+      "file": "outputs/pilot/audio_examples/672-122797-0044_stretch_09_negative.wav",
+      "rms": 0.026915654048800926,
+      "peak": 0.2299025058746338,
+      "samples": 66489
+    },
+    {
+      "file": "outputs/pilot/audio_examples/672-122797-0044_stretch_11_positive.wav",
+      "rms": 0.026151321132524847,
+      "peak": 0.1701829433441162,
+      "samples": 54400
+    },
+    {
+      "file": "outputs/pilot/audio_examples/672-122797-0044_stretch_11_negative.wav",
+      "rms": 0.026430327826755338,
+      "peak": 0.2027558833360672,
+      "samples": 54400
+    },
+    {
+      "file": "outputs/pilot/audio_examples/672-122797-0044_crop_10_positive.wav",
+      "rms": 0.040578252050862657,
+      "peak": 0.2912736237049103,
+      "samples": 53856
+    },
+    {
+      "file": "outputs/pilot/audio_examples/672-122797-0044_crop_10_negative.wav",
+      "rms": 0.040587776842547725,
+      "peak": 0.291778564453125,
+      "samples": 53856
+    },
+    {
+      "file": "outputs/pilot/audio_examples/672-122797-0044_crop_25_positive.wav",
+      "rms": 0.044159006329180794,
+      "peak": 0.2912736237049103,
+      "samples": 44880
+    },
+    {
+      "file": "outputs/pilot/audio_examples/672-122797-0044_crop_25_negative.wav",
+      "rms": 0.04416852706068449,
+      "peak": 0.291778564453125,
+      "samples": 44880
+    }
+  ],
+  "raw_sha256": "9e6572f39d5df80421682ad86611d01faa8bd13e347126e9b0fd888f9cfd1328",
+  "listening_status": "No human listening performed; decoded samples, waveforms, spectra and numerical metrics inspected.",
+  "estimated_full_runtime_seconds": 361.6337225516327,
+  "estimated_full_examples_bytes": 7040060
+}

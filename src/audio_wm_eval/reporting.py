@@ -309,12 +309,146 @@ def _rate_interval(row, metric) -> str:
 
 
 def _table(summary: pd.DataFrame, intervals: bool = True) -> str:
-    lines = ["| Condition | TPR | FPR | BER | Exact 16-bit | Failed rows |",
-             "|---|---:|---:|---:|---:|---:|"]
+    metrics = [("tpr", "TPR"), ("fpr", "FPR")]
+    if intervals:
+        metrics += [("fnr", "FNR"), ("bit_accuracy", "Bit accuracy")]
+    metrics += [("ber", "BER"), ("exact_recovery", "Exact 16-bit")]
+    lines = ["| Condition | " + " | ".join(label for _, label in metrics) + " | Failed rows |",
+             "|---|" + "---:|" * (len(metrics) + 1)]
     for _, row in summary.iterrows():
         value = lambda m: _rate_interval(row, m) if intervals else _pct(row[f"{m}_mean"])
-        lines.append(f"| {LABELS.get(row.condition, row.condition)} | {value('tpr')} | {value('fpr')} | {value('ber')} | {value('exact_recovery')} | {int(row.n_failed)} |")
+        lines.append(f"| {LABELS.get(row.condition, row.condition)} | "
+                     + " | ".join(value(metric) for metric, _ in metrics) + f" | {int(row.n_failed)} |")
     return "\n".join(lines)
+
+
+def _numeric_interval(row, metric: str, digits: int = 2) -> str:
+    return (f"{_number(row[f'{metric}_mean'], digits)} "
+            f"[{_number(row[f'{metric}_ci_low'], digits)}, {_number(row[f'{metric}_ci_high'], digits)}]")
+
+
+def _quality_runtime_tables(summary: pd.DataFrame) -> str:
+    quality = ["| Condition | Positive SNR (dB) | Negative SNR (dB) | Positive STOI | Positive duration (s) | Positive clipping |",
+               "|---|---:|---:|---:|---:|---:|"]
+    runtime = ["| Condition | Positive attack (ms) | Negative attack (ms) | Positive detection (ms) | Negative detection (ms) |",
+               "|---|---:|---:|---:|---:|"]
+    for _, row in summary.iterrows():
+        label = LABELS.get(row.condition, row.condition)
+        quality.append(f"| {label} | {_numeric_interval(row, 'positive_quality_snr_db')} | "
+                       f"{_numeric_interval(row, 'negative_quality_snr_db')} | {_numeric_interval(row, 'positive_stoi', 3)} | "
+                       f"{_numeric_interval(row, 'positive_output_duration_seconds', 3)} | "
+                       f"{_rate_interval(row, 'positive_clipping_fraction')} |")
+        runtime.append(f"| {label} | " + " | ".join(_numeric_interval(row, name) for name in
+                       ("positive_attack_runtime_ms", "negative_attack_runtime_ms",
+                        "positive_detect_runtime_ms", "negative_detect_runtime_ms")) + " |")
+    return "\n".join(quality) + "\n\n" + "\n".join(runtime)
+
+
+def _optional_json(path: Path) -> dict:
+    if not path.is_file():
+        return {}
+    value = json.loads(path.read_text())
+    if not isinstance(value, dict):
+        raise ValueError(f"Evidence file must contain a JSON object: {path}")
+    return value
+
+
+def _project_root(raw_path: str | Path) -> Path:
+    """Find experiment evidence near the input, never from an unrelated cwd."""
+    parent = Path(raw_path).resolve().parent
+    for candidate in (parent, *parent.parents):
+        if (candidate / "outputs/environment.json").is_file() or (candidate / "configs/experiment.yaml").is_file():
+            return candidate
+    return parent
+
+
+def _environment_table(environment: dict, run_manifest: dict) -> str:
+    packages = environment.get("packages", {})
+    config = run_manifest.get("config", {})
+    provenance = environment.get("model_provenance", {})
+    cpu_text = environment.get("cpu", {}).get("stdout", "")
+    cpu_model = next((line.split(":", 1)[1].strip() for line in cpu_text.splitlines()
+                      if line.strip().startswith("Model name:")), "not recorded")
+    ffmpeg_text = environment.get("ffmpeg", {}).get("stdout", "")
+    ffmpeg_version = ffmpeg_text.splitlines()[0] if ffmpeg_text else "not recorded"
+    settings = [
+        ("Python", environment.get("python", "not recorded")),
+        ("Host / CPU", f"{environment.get('platform', 'not recorded')}; {cpu_model}; {environment.get('cpu_count', 'NA')} logical CPUs"),
+        ("Execution", f"device={config.get('device', environment.get('device', 'NA'))}; "
+         f"torch_threads={config.get('torch_threads', environment.get('torch_threads', 'NA'))}; "
+         f"CUDA available={environment.get('cuda_available', 'NA')}; "
+         f"deterministic_algorithms={environment.get('deterministic_algorithms', 'NA')}; "
+         f"torch_compile_disabled={environment.get('torch_compile_disabled', 'NA')}"),
+        ("Core software", "; ".join(f"{name}=={packages.get(name, 'not recorded')}" for name in
+                                  ("audioseal", "torch", "torchaudio", "numpy", "scipy", "librosa", "soundfile", "pystoi"))),
+        ("FFmpeg", ffmpeg_version),
+        ("Generator / detector", f"{config.get('generator', 'not recorded')} / {config.get('detector', 'not recorded')}"),
+        ("Embedding / payload", f"strength={config.get('watermark_strength', 'NA')}; 16 bits; seed={config.get('seed', environment.get('seed', 'NA'))}"),
+        ("Checkpoint revision", provenance.get("model_revision", "not recorded")),
+        ("Generator SHA-256", provenance.get("generator", {}).get("sha256", "not recorded")),
+        ("Detector SHA-256", provenance.get("detector", {}).get("sha256", "not recorded")),
+        ("Dependency-lock SHA-256", environment.get("lock_sha256", "not recorded")),
+    ]
+    return "\n".join(["| Recorded item | Value |", "|---|---|"] +
+                     [f"| {name} | {str(value).replace('|', '/').replace(chr(10), ' ')} |" for name, value in settings])
+
+
+def _attack_table(raw: pd.DataFrame) -> str:
+    mechanics = {
+        "clean": "Identity; no post-processing other than the common range policy.",
+        "mp3": "FFmpeg libmp3lame encode/decode at 16 kHz; codec delay not independently aligned; SNR/STOI NA.",
+        "noise": "One seeded standard-normal draw; scaled separately to each branch's RMS for target SNR before limiting.",
+        "resample": "SciPy polyphase down/up sampling, Kaiser window beta=5; output trimmed to input sample count.",
+        "pitch": "librosa phase-vocoder pitch shift, 12 bins/octave, soxr_hq; default FFT=2048/hop=512; SNR/STOI NA.",
+        "stretch": "librosa phase-vocoder stretch; default FFT=2048/hop=512; output length approximately input/rate; SNR/STOI NA.",
+        "crop": "Retain a contiguous round(N*(1-fraction)) window at a seeded random valid start; SNR/STOI NA.",
+    }
+    lines = ["| Condition | Recorded parameters | Operation / quality applicability |", "|---|---|---|"]
+    for condition, rows in raw.groupby("condition", sort=False):
+        family = rows.attack_family.iloc[0]
+        settings = json.loads(rows.attack_setting.iloc[0])
+        parameters = ", ".join(f"{key}={value}" for key, value in sorted(settings.items()) if key not in {"id", "family"}) or "none"
+        lines.append(f"| {LABELS.get(condition, condition)} | {parameters} | {mechanics.get(family, 'See raw attack_metadata.')} |")
+    return "\n".join(lines)
+
+
+def _validation_evidence(project: Path, raw_path: Path, reports: Path, environment: dict) -> tuple[str, str]:
+    artifacts = [("Official smoke retry", project / "outputs/smoke_test.json"),
+                 ("Pilot inspection", project / "outputs/pilot/inspection.json"),
+                 ("Raw run validation", raw_path.resolve().parent / "validation.json"),
+                 ("Final test suite", project / "outputs/final_validation.json"),
+                 ("Reproducibility audit", project / "outputs/reproducibility_audit.json"),
+                 ("Claims audit", project / "outputs/claims_audit.json")]
+    lines = ["| Validation stage | Recorded result | Artifact |", "|---|---|---|"]
+    for label, path in artifacts:
+        evidence = _optional_json(path)
+        if not evidence:
+            lines.append(f"| {label} | not present at generation; consult the final STATUS.md audit record | — |")
+            continue
+        detail = [f"status={evidence.get('status', 'not specified')}"]
+        for key in ("actual_rows", "expected_rows", "failed_rows", "tests_passed", "tests_failed", "matched_rows", "summary"):
+            if key in evidence and isinstance(evidence[key], (str, int, float, bool)):
+                detail.append(f"{key}={evidence[key]}")
+        text = "; ".join(detail).replace("|", "/").replace("\n", " ")
+        relative = Path(os.path.relpath(path, reports)).as_posix()
+        lines.append(f"| {label} | {text} | [{path.name}]({relative}) |")
+    smoke_failures = sorted((project / "outputs").glob("smoke_test_failed*.json"))
+    setup = "No earlier smoke-failure artifact was present in the evidence directory when this report was generated."
+    if smoke_failures:
+        first = _optional_json(smoke_failures[0])
+        error = str(first.get("error_message", "unspecified failure"))
+        relative = Path(os.path.relpath(smoke_failures[0], reports)).as_posix()
+        if "setuptools" in error:
+            setup = ("The first official-example smoke attempt failed in PyTorch's optional Inductor compilation "
+                     "with `ModuleNotFoundError: No module named 'setuptools'`. "
+                     f"The recorded environment includes `setuptools=={environment.get('packages', {}).get('setuptools', 'not recorded')}` "
+                     f"and `torch_compile_disabled={environment.get('torch_compile_disabled', 'not recorded')}`. "
+                     "The successful retry used the official model's eager inference path with `TORCHDYNAMO_DISABLE=1`; "
+                     "the official AudioSeal implementation and checkpoints were not substituted. "
+                     f"The original failure and traceback are retained in [{smoke_failures[0].name}]({relative}).")
+        else:
+            setup = f"An earlier smoke attempt failed: `{error.splitlines()[0]}`. See [{smoke_failures[0].name}]({relative})."
+    return setup, "\n".join(lines)
 
 
 def _write_reports(raw: pd.DataFrame, summary: pd.DataFrame, paired: pd.DataFrame, metadata: dict, reports: Path, output: Path) -> None:
@@ -331,10 +465,10 @@ def _write_reports(raw: pd.DataFrame, summary: pd.DataFrame, paired: pd.DataFram
         "[robustness framing](https://arxiv.org/abs/2503.19176); "
         "[benchmark design reference](https://doi.org/10.1109/ACCESS.2026.3685903)."
     )
-    env_path = Path("outputs/environment.json")
-    environment = {}
-    if env_path.exists():
-        environment = json.loads(env_path.read_text())
+    project = _project_root(metadata["raw_path"])
+    environment = _optional_json(project / "outputs/environment.json")
+    run_manifest = _optional_json(Path(metadata["raw_path"]).resolve().parent / "run_manifest.json")
+    setup_failures, validation_table = _validation_evidence(project, Path(metadata["raw_path"]), reports, environment)
     clean_text = "Clean-condition results unavailable."
     if clean is not None:
         clean_text = (f"Clean TPR was {_rate_interval(clean, 'tpr')}; FPR was {_rate_interval(clean, 'fpr')}. "
@@ -366,8 +500,13 @@ def _write_reports(raw: pd.DataFrame, summary: pd.DataFrame, paired: pd.DataFram
     runtimes = (
         f"Embedding median {_number(once.embed_runtime_ms.median())} ms/clip ({len(once)} distinct positive clips); "
         f"detection median {_number(pd.concat([positive_ok, negative_ok]).detect_runtime_ms.median())} ms per successful branch-condition inference. "
-        "Runtime is measured on this host and includes warm-up/cache effects; it is not a cross-hardware benchmark."
+        "Per-row embedding/detection timing excludes model loading and the dedicated model warmup. "
+        "Attack timing includes codec I/O and first library imports; cache effects and fixed positive-before-negative order can affect timing. "
+        "Quality calculations and example-file writes contribute only to total run wall time. These are host-specific measurements, not a cross-hardware benchmark."
     )
+    baseline_stats = {}
+    for column in ("watermark_snr_db", "watermark_stoi", "embed_runtime_ms"):
+        baseline_stats.update(_summary(once[column], column, SEED, metadata["bootstrap_resamples"]))
     negative_aligned = negative_ok.quality_snr_db.notna().sum()
     positive_aligned = positive_ok.quality_snr_db.notna().sum()
     technical = f"""# Preliminary AudioSeal robustness evaluation
@@ -392,6 +531,14 @@ The AudioSeal paper and official repository define the evaluated system. The sup
 - Conditions: clean; MP3 128/64 kbps; Gaussian noise at 30/20 dB target SNR; downsample/upsample through 12/8 kHz; pitch ±2 semitones; librosa time-stretch rates 0.9/1.1 (output duration approximately input duration divided by rate); and removal of 10%/25% of duration by deterministic cropping. Exact mechanics and attack diagnostics are retained in raw `attack_metadata`; settings are in `configs/attacks.yaml`.
 - The official detector yields frame probabilities and message probabilities. A frame is positive when its watermark probability exceeds {raw.frame_threshold.iloc[0]:g}. The clip score is the fraction of positive frames. This study prespecifies clip detection as score > {raw.detector_threshold.iloc[0]:g}; this clip decision is not asserted to be an officially calibrated deployment default. Thresholds were not selected using these evaluation outcomes.
 - The official example-audio smoke test gated the dataset download. A two-clip pilot covered all conditions before the full run; pilot and smoke artifacts are retained separately.
+
+The following configuration and software values come from saved run/environment evidence, rather than the current shell or unrecorded defaults. The complete dependency list and provenance remain in `outputs/environment.json`.
+
+{_environment_table(environment, run_manifest)}
+
+{_attack_table(raw)}
+
+Every output uses the common range policy: any samples outside [−1, 1] are limited before detection, with the prelimit rate recorded separately. Matched noise branches share the same random realization, scaled to their own RMS. Cropping removes a total fraction by retaining one contiguous window; it does not remove an interior segment and concatenate the remainder. The manifest selection occurs before inference and uses only source eligibility, sorted identities, and the fixed seed.
 
 ## Metrics and uncertainty
 
@@ -421,13 +568,19 @@ Each bracketed interval is a clip-bootstrap 95% interval. Metric-specific `*_n`,
 
 ## Quality, timing, and failure accounting
 
-The mean preattack watermark SNR across distinct successfully processed clips was {_number(wm_snr.mean())} dB ({len(wm_snr)} clips). Mean preattack watermark STOI was {_number(wm_stoi.mean(), 4)} ({len(wm_stoi)} valid clips). The maximum successful-output clipping fraction was {_pct(max_clip)}. Clipping, duration, and runtime are tabulated separately for both branches in the summary CSV.
+Across distinct successfully processed clips, preattack watermark SNR was {_numeric_interval(baseline_stats, 'watermark_snr_db')} dB ({len(wm_snr)} clips), watermark STOI was {_numeric_interval(baseline_stats, 'watermark_stoi', 4)} ({len(wm_stoi)} valid clips), and embedding runtime was {_numeric_interval(baseline_stats, 'embed_runtime_ms')} ms/clip. Values are means with clip-bootstrap 95% intervals. The maximum successful-output clipping fraction was {_pct(max_clip)}. Clipping, duration, and runtime are tabulated separately for both branches in the summary CSV.
 
 {runtimes}
+
+The following tables show means [95% clip-bootstrap interval]; NA marks an inapplicable or unavailable metric, and infinite clean-control SNR has no finite interval. Means of attack/runtime measurements include first-use import costs where they occurred. Per-metric denominators and negative-branch STOI, clipping, and duration also appear in the CSV.
+
+{_quality_runtime_tables(summary)}
 
 ![Quality and detection]({report_rel}/figures/quality_vs_detection.png)
 
 There were {failures} failed inference/attack rows. [failures.csv]({report_rel}/failures.csv) retains every failed row and its error message, including an empty header-only file if none failed. Setup, download, test, and other command failures are recorded in `STATUS.md` and `outputs/logs/`; absence of failed inference rows does not imply that every setup command succeeded. See those records for exact commands and resolutions.
+
+{setup_failures}
 
 ## Interpretation and limits
 
@@ -444,6 +597,10 @@ The deterministic selection is not a random sample of all speech. Audiobook spee
 - Dataset composition: [dataset_composition.csv]({report_rel}/dataset_composition.csv); paired contrasts: [paired_differences.csv]({report_rel}/paired_differences.csv); aggregation metadata: [aggregation_metadata.json]({report_rel}/aggregation_metadata.json).
 - Recreate aggregates with `.venv/bin/python scripts/generate_report.py --raw {metadata['raw_path']} --output-dir outputs/reproduced_summary --reports-dir reports/reproduced --resamples {metadata['bootstrap_resamples']}`. Output directories must not contain existing generated artifacts.
 - Complete run and test commands are in `README.md` and `STATUS.md`. Reproducibility checks compare deterministic messages, attack outputs, and scientific metrics; measured wall-clock runtime is expected to vary.
+
+Validation evidence available when these artifacts were generated is summarized below. Final claims review may follow report creation; its authoritative record is retained separately in `outputs/claims_audit.json` and `STATUS.md`.
+
+{validation_table}
 """
     # Exactly seven rows at most: clean plus the lowest-TPR setting in each
     # transformation family (BER breaks ties). Selection is explicit, descriptive.
@@ -453,25 +610,29 @@ The deterministic selection is not a random sample of all speech. Audiobook spee
     for _, group in attacks.groupby("attack_family", sort=False):
         selected.append(group.sort_values(["tpr_mean", "ber_mean", "condition"], ascending=[True, False, True], na_position="last").iloc[0])
     panel_table = _table(pd.DataFrame(selected), intervals=False)
+    panel_false_positive_note = ""
+    if len(zero_conditions):
+        panel_false_positive_note = (f"Zero observed FPR gives a degenerate [0,0] bootstrap interval, not proof of zero population FPR; "
+                                     f"the largest supplemental 95% Wilson upper bound was {_pct(zero_conditions.fpr_wilson_ci_high.max())}, assuming independent clips.")
     panel = f"""# AudioSeal: preliminary robustness panel
 
-**Scope.** Official pretrained AudioSeal, inference only; {n} public LibriSpeech clips from {speakers} speakers, mono 16 kHz, {_number(clips.duration_seconds.min(), 1)}–{_number(clips.duration_seconds.max(), 1)} seconds. Deterministic 16-bit messages and seed {SEED}. {summary.shape[0]} conditions × matched watermarked/unwatermarked branches = {len(raw)} attempted rows. No training or fine-tuning.
+**Scope.** Official pretrained AudioSeal; {n} public LibriSpeech clips, {speakers} speakers, mono 16 kHz, {_number(clips.duration_seconds.min(), 1)}–{_number(clips.duration_seconds.max(), 1)} seconds. Deterministic 16-bit messages; seed {SEED}. {summary.shape[0]} conditions × matched positive/negative branches = {len(raw)} attempted rows. No training or fine-tuning.
 
-**Decision rule.** Frame watermark probability > {raw.frame_threshold.iloc[0]:g}; study-prespecified clip decision when the fraction of positive frames > {raw.detector_threshold.iloc[0]:g}. This is not a claim of an officially calibrated clip threshold.
+**Decision.** Frame watermark probability > {raw.frame_threshold.iloc[0]:g}; clip positive when positive-frame fraction > {raw.detector_threshold.iloc[0]:g}. The clip threshold is study-prespecified, without deployment calibration.
 
 **Observed results.** {clean_text} {attack_text}
 
-The table shows clean and the lowest-TPR setting per attack family (higher BER breaks ties); both severities and 95% intervals are in the technical report. These selections summarize observed outcomes, not inferential comparisons.
+Clean and lowest-TPR setting per family are shown; higher BER breaks ties. All settings and 95% intervals appear in the technical report. These are descriptive selections.
 
 {panel_table}
 
-**Quality and runtime.** Mean watermark SNR {_number(wm_snr.mean())} dB; mean watermark STOI {_number(wm_stoi.mean(), 3)}. Maximum output clipping fraction {_pct(max_clip)}. Median embedding {_number(once.embed_runtime_ms.median(), 1)} ms/clip; median successful detection {_number(pd.concat([positive_ok, negative_ok]).detect_runtime_ms.median(), 1)} ms/inference on this host. Sample-aligned SNR/STOI are inapplicable for temporally incompatible outputs. Objective metrics do not establish inaudibility; no human listening evaluation was performed.
+**Quality/runtime.** Mean watermark SNR {_number(wm_snr.mean())} dB; STOI {_number(wm_stoi.mean(), 3)}. Maximum clipping {_pct(max_clip)}. Median embedding {_number(once.embed_runtime_ms.median(), 1)} ms/clip; detection {_number(pd.concat([positive_ok, negative_ok]).detect_runtime_ms.median(), 1)} ms/inference, excluding model loading/warmup. Temporal incompatibility makes sample-aligned SNR/STOI inapplicable. These metrics do not establish inaudibility; no listening study was performed.
 
-**Uncertainty and failures.** {metadata['bootstrap_resamples']:,} clip-bootstrap resamples; payload bits are not independent samples. Repeated clips across conditions are paired. {failures}/{len(raw)} rows failed; valid denominators, missing counts, and failure bounds are retained in CSV. {false_positive_note}
+**Uncertainty/failures.** {metadata['bootstrap_resamples']:,} clip-bootstrap resamples; bits are not independent samples and conditions reuse paired clips. {failures}/{len(raw)} rows failed; denominators and failure bounds remain in CSV. {panel_false_positive_note}
 
-**Conclusion.** These measurements provide a reproducible baseline for one checkpoint pair and a small audiobook-speech subset. Multiple clips per speaker and deterministic selection limit generalization and can make clip-level intervals optimistic. They do not prove general robustness, adversarial security, or deployment readiness. Larger speaker-disjoint tests, independent threshold calibration, broader audio and attacks, and listening tests are the next steps.
+**Limits.** One checkpoint pair and a small audiobook subset provide a preliminary baseline. Speaker dependence can make clip intervals optimistic. Findings do not establish general robustness, security, or deployment readiness. Next: larger speaker-disjoint tests, independent threshold calibration, broader audio/attacks, and listening tests.
 
-**Evidence.** [Technical report](technical_report.md), [raw-derived summary]({report_rel}/summary_results.csv), [failure log]({report_rel}/failures.csv), and [source notes](source_notes.md). {source_links}
+**Evidence.** [Technical report](technical_report.md), [raw-derived summary]({report_rel}/summary_results.csv), [failures]({report_rel}/failures.csv), and [source notes](source_notes.md).
 """
     (reports / "technical_report.md").write_text(technical, encoding="utf-8")
     (reports / "panel_summary.md").write_text(panel, encoding="utf-8")

@@ -1,0 +1,20 @@
+{
+  "status": "passed",
+  "rows_compared": 52,
+  "reference_sha256": "9e6572f39d5df80421682ad86611d01faa8bd13e347126e9b0fd888f9cfd1328",
+  "candidate_sha256": "2a7b9cc2c983f4d6f72bfb14e039747927cf796bebefc352ac3c98a14aedbfe3",
+  "excluded_fields": [
+    "attack_runtime_ms",
+    "code_sha256",
+    "detect_runtime_ms",
+    "embed_runtime_ms",
+    "git_commit",
+    "run_id"
+  ],
+  "numeric_tolerance": {
+    "rtol": 1e-07,
+    "atol": 1e-07
+  },
+  "max_tolerated_difference": 0.0,
+  "failures": []
+}

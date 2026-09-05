@@ -47,3 +47,13 @@
 - Command: `.venv/bin/python -m pytest -q > outputs/logs/tests_before_pilot.log` — 84 passed, 14 upstream Matplotlib/pyparsing deprecation warnings. Added further audio I/O, result completeness and separate-process deterministic message tests for the integrated runner; running next.
 - Additional failed inspection commands preserved here: pre-initialization `git status` (no Git repository); attempted reads of not-yet-created test files/incorrect adapter.py filename; one inline reporting probe omitted PYTHONPATH and failed `ModuleNotFoundError: audio_wm_eval`, corrected with PYTHONPATH=src. Two subagents reached service usage limits before their second tasks completed; root continued the work. No empirical result or failed clip was removed.
 - Next exact actions: run complete pre-pilot tests, initialize/commit only the new project with ignored binary artifacts excluded, then `.venv/bin/python scripts/run_experiment.py --limit 2 --output-dir outputs/pilot --save-audio all`.
+
+## F — passed; G — pilot passed and inspected
+
+- Integrated suite: `.venv/bin/python -m pytest -q > outputs/logs/tests_integrated_before_pilot.log` — 108 passed in 5.64 s, 14 upstream deprecation warnings.
+- Initialized Git only inside the new project and committed implementation/manifest (`3a1ad8dfa458b46fc17f0ade0b5f23d3607a71f1`). Verified tracked files contain no audio, checkpoints, caches or environment binaries.
+- Pilot command: `.venv/bin/python scripts/run_experiment.py --limit 2 --output-dir outputs/pilot --save-audio all`; 52/52 valid rows, zero failed rows, 30.14 s total. Raw SHA256 `9e6572f39d5df80421682ad86611d01faa8bd13e347126e9b0fd888f9cfd1328`.
+- Inspector command: `.venv/bin/python scripts/inspect_pilot.py` — passed; all 52 WAVs decode and have valid non-silent ranges, all target-noise and duration checks pass. Both clean positives detected/recovered all 16 bits, both clean controls negative. Numeric crop/stretch/noise settings match metadata.
+- Viewed outputs/pilot/inspection.png across clean + all six families. Waveforms and spectra show expected bandwidth, duration and noise changes. This is objective visual/sample inspection; no human listening was performed or claimed.
+- Pilot observations retained: pitch errors; detection/message dissociation under stretching and cropping. These are experimental outcomes, not pipeline failures, and do not invalidate the complete run.
+- Estimated full runtime 361.6 s; first-clip full-run audio examples ~7.0 MB. Next exact action: `.venv/bin/python scripts/run_experiment.py --output-dir outputs` after source snapshot; then independent two-clip replay and raw-derived reporting.

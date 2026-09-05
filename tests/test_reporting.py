@@ -141,3 +141,56 @@ def test_generate_report_retains_failures_and_refuses_overwrite(tmp_path):
     assert len((reports / "panel_summary.md").read_text().split()) < 550
     with pytest.raises(FileExistsError):
         generate_report(raw_path, output, reports, resamples=1000)
+
+
+def test_reports_use_saved_evidence_and_disclose_smoke_failure(tmp_path, monkeypatch):
+    from audio_wm_eval import reporting
+    monkeypatch.setattr(reporting, "_figures", lambda *args: None)
+    evidence = tmp_path / "outputs"
+    evidence.mkdir()
+    environment = {"python": "3.11.test", "cpu_count": 4, "device": "cpu",
+                   "torch_threads": 4, "torch_compile_disabled": True,
+                   "packages": {"setuptools": "75.8.0", "audioseal": "0.2.0"}}
+    (evidence / "environment.json").write_text(json.dumps(environment))
+    (evidence / "smoke_test_failed_01.json").write_text(json.dumps({
+        "status": "failed", "error_message": "ModuleNotFoundError: No module named 'setuptools'"}))
+    (evidence / "smoke_test.json").write_text('{"status":"passed"}')
+    (evidence / "final_validation.json").write_text(json.dumps({
+        "status": "passed", "tests_passed": 97, "tests_failed": 0}))
+    (tmp_path / "run_manifest.json").write_text(json.dumps({
+        "config": {"generator": "saved-generator", "detector": "saved-detector", "watermark_strength": 1}}))
+    raw = write_raw(tmp_path)
+    reports = tmp_path / "reports"
+    generate_report(raw, tmp_path / "summary", reports, resamples=1000)
+    technical = (reports / "technical_report.md").read_text()
+    assert "3.11.test" in technical and "saved-generator / saved-detector" in technical
+    assert "ModuleNotFoundError: No module named 'setuptools'" in technical
+    assert "TORCHDYNAMO_DISABLE=1" in technical
+    assert "dedicated model warmup" in technical and "first library imports" in technical
+    assert "tests_passed=97" in technical and "tests_failed=0" in technical
+    assert "Positive attack (ms)" in technical and "Negative SNR (dB)" in technical
+    assert "| FNR | Bit accuracy |" in technical
+    assert "scaled separately to each branch's RMS" in technical
+
+
+def test_full_protocol_panel_fits_one_page_word_budget(tmp_path, monkeypatch):
+    from audio_wm_eval import reporting
+    monkeypatch.setattr(reporting, "_figures", lambda *args: None)
+    definitions = [("clean", "clean"), ("mp3_128", "mp3"), ("mp3_64", "mp3"),
+                   ("noise_30", "noise"), ("noise_20", "noise"),
+                   ("resample_12000", "resample"), ("resample_8000", "resample"),
+                   ("pitch_minus2", "pitch"), ("pitch_plus2", "pitch"),
+                   ("stretch_09", "stretch"), ("stretch_11", "stretch"),
+                   ("crop_10", "crop"), ("crop_25", "crop")]
+    baseline = [row for row in fixture_rows() if row["condition"] == "clean"]
+    rows = [dict(row, condition=condition, attack_family=family,
+                 attack_setting=json.dumps({"id": condition, "family": family}))
+            for condition, family in definitions for row in baseline]
+    raw = write_raw(tmp_path, rows)
+    reports = tmp_path / "reports"
+    generate_report(raw, tmp_path / "outputs", reports, resamples=1000)
+    panel = (reports / "panel_summary.md").read_text()
+    assert len(panel.split()) <= 550
+    assert "not proof of zero population FPR" in panel
+    assert "speaker" in panel.lower() and "not independent samples" in panel
+    assert "13 conditions" in panel

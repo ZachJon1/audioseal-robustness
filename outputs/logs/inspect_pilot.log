@@ -1,0 +1,10 @@
+{
+  "expected_rows": 52,
+  "actual_rows": 52,
+  "failed_rows": 0,
+  "status": "passed",
+  "raw_sha256": "9e6572f39d5df80421682ad86611d01faa8bd13e347126e9b0fd888f9cfd1328",
+  "listening_status": "No human listening performed; decoded samples, waveforms, spectra and numerical metrics inspected.",
+  "estimated_full_runtime_seconds": 361.6337225516327,
+  "estimated_full_examples_bytes": 7040060
+}
