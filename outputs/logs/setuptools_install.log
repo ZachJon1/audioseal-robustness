@@ -1,0 +1,6 @@
+Resolved 1 package in 277ms
+Downloading setuptools (1.2MiB)
+ Downloaded setuptools
+Prepared 1 package in 166ms
+Installed 1 package in 13ms
+ + setuptools==75.8.0

@@ -1,0 +1,149 @@
+{
+  "sha": "e63a8a0e5cdf7bb797159c92ba15961557fe9bd2",
+  "node_id": "C_kwDOLJ6hk9oAKGU2M2E4YTBlNWNkZjdiYjc5NzE1OWM5MmJhMTU5NjE1NTdmZTliZDI",
+  "commit": {
+    "author": {
+      "name": "Tuan Tran",
+      "email": "1254753+antoine-tran@users.noreply.github.com",
+      "date": "2026-05-19T17:27:01Z"
+    },
+    "committer": {
+      "name": "GitHub",
+      "email": "noreply@github.com",
+      "date": "2026-05-19T17:27:01Z"
+    },
+    "message": "Add Meta copyright headers to moshi modules (#104)\n\nCo-authored-by: Tuan Tran <tuantran@fb.com>",
+    "tree": {
+      "sha": "54284f9f7d8128609b8cc2c72232ce716de52fbc",
+      "url": "https://api.github.com/repos/facebookresearch/audioseal/git/trees/54284f9f7d8128609b8cc2c72232ce716de52fbc"
+    },
+    "url": "https://api.github.com/repos/facebookresearch/audioseal/git/commits/e63a8a0e5cdf7bb797159c92ba15961557fe9bd2",
+    "comment_count": 0,
+    "verification": {
+      "verified": true,
+      "reason": "valid",
+      "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJqDJ1lCRC1aQ7uu5UhlAAA+6oQAKo/pxySE98g6OQiazAl3b9T\n97bZKY8B1xpsxYqXHVzTMWP8ZyI9RzQWpcE7yhWeR48AAGwQ9pKWxGM5ezkby/0Z\nqT8rVys/2GQxVQXWI37144fOGbbV4HH03ytaQSylWA8uWmbWzXQFMuqDc7bTaaxx\nHGAReDRobC1ve06O6HHj7h1AAorRjRZKKD5pJ491ZBUT3IzwkMBzJFxcwzjUM9nk\nQK+AL2gGdthtWgSUiZyv7/XyuHSCammbdiQDJnf2ZlXjtd2z6KlbPBFaVlXv5886\n268qI60KdU9bMKa7WRa7ncL13GzyTnOq6QB9QATHfxmSbGqUTkBTSjdkzHyWtkIB\n4hgHhH95LLum5MbujQoS7D/iYiRggc+OJ6f8AAKjJIjh4XnckAszOh6UJ5IgDSmG\ni90ziDLeXSPjeKNGO6m/fQOBnU8dZSGdXQFvpFlk8Uk8PNA7y45v/IOxhDKt/msO\nBnzkMqhb7L0EKlbRj9CfgSf6vctdtbWqBup0NzbSMBBEu0q9xsBVMopRGmJ1y24G\negjw1XtTmz0lH+exjDz5VwfqnhymEvE1GddB9fRd5iPx+91UhDRWizsiMWUMwObM\ns2AAj4Ttep8XrglKANVX+PVBIV/sLbhCqgWgV5SVzfYsLLhbL3z08bYbuj6t4bAi\noSLTV2OAjkrmrnAQf1+d\n=WluM\n-----END PGP SIGNATURE-----\n",
+      "payload": "tree 54284f9f7d8128609b8cc2c72232ce716de52fbc\nparent a0ce2564ff2ba706356cdd2ad4308c4bd499b43c\nauthor Tuan Tran <1254753+antoine-tran@users.noreply.github.com> 1779211621 -0400\ncommitter GitHub <noreply@github.com> 1779211621 -0400\n\nAdd Meta copyright headers to moshi modules (#104)\n\nCo-authored-by: Tuan Tran <tuantran@fb.com>",
+      "verified_at": "2026-05-19T17:27:03Z"
+    }
+  },
+  "url": "https://api.github.com/repos/facebookresearch/audioseal/commits/e63a8a0e5cdf7bb797159c92ba15961557fe9bd2",
+  "html_url": "https://github.com/facebookresearch/audioseal/commit/e63a8a0e5cdf7bb797159c92ba15961557fe9bd2",
+  "comments_url": "https://api.github.com/repos/facebookresearch/audioseal/commits/e63a8a0e5cdf7bb797159c92ba15961557fe9bd2/comments",
+  "author": {
+    "login": "antoine-tran",
+    "id": 1254753,
+    "node_id": "MDQ6VXNlcjEyNTQ3NTM=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/1254753?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/antoine-tran",
+    "html_url": "https://github.com/antoine-tran",
+    "followers_url": "https://api.github.com/users/antoine-tran/followers",
+    "following_url": "https://api.github.com/users/antoine-tran/following{/other_user}",
+    "gists_url": "https://api.github.com/users/antoine-tran/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/antoine-tran/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/antoine-tran/subscriptions",
+    "organizations_url": "https://api.github.com/users/antoine-tran/orgs",
+    "repos_url": "https://api.github.com/users/antoine-tran/repos",
+    "events_url": "https://api.github.com/users/antoine-tran/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/antoine-tran/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "committer": {
+    "login": "web-flow",
+    "id": 19864447,
+    "node_id": "MDQ6VXNlcjE5ODY0NDQ3",
+    "avatar_url": "https://avatars.githubusercontent.com/u/19864447?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/web-flow",
+    "html_url": "https://github.com/web-flow",
+    "followers_url": "https://api.github.com/users/web-flow/followers",
+    "following_url": "https://api.github.com/users/web-flow/following{/other_user}",
+    "gists_url": "https://api.github.com/users/web-flow/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/web-flow/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/web-flow/subscriptions",
+    "organizations_url": "https://api.github.com/users/web-flow/orgs",
+    "repos_url": "https://api.github.com/users/web-flow/repos",
+    "events_url": "https://api.github.com/users/web-flow/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/web-flow/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "parents": [
+    {
+      "sha": "a0ce2564ff2ba706356cdd2ad4308c4bd499b43c",
+      "url": "https://api.github.com/repos/facebookresearch/audioseal/commits/a0ce2564ff2ba706356cdd2ad4308c4bd499b43c",
+      "html_url": "https://github.com/facebookresearch/audioseal/commit/a0ce2564ff2ba706356cdd2ad4308c4bd499b43c"
+    }
+  ],
+  "stats": {
+    "total": 15,
+    "additions": 15,
+    "deletions": 0
+  },
+  "files": [
+    {
+      "sha": "f12374f925c3be77e38861bae4191073c052059b",
+      "filename": "src/audioseal/libs/moshi/modules/gating.py",
+      "status": "modified",
+      "additions": 3,
+      "deletions": 0,
+      "changes": 3,
+      "blob_url": "https://github.com/facebookresearch/audioseal/blob/e63a8a0e5cdf7bb797159c92ba15961557fe9bd2/src%2Faudioseal%2Flibs%2Fmoshi%2Fmodules%2Fgating.py",
+      "raw_url": "https://github.com/facebookresearch/audioseal/raw/e63a8a0e5cdf7bb797159c92ba15961557fe9bd2/src%2Faudioseal%2Flibs%2Fmoshi%2Fmodules%2Fgating.py",
+      "contents_url": "https://api.github.com/repos/facebookresearch/audioseal/contents/src%2Faudioseal%2Flibs%2Fmoshi%2Fmodules%2Fgating.py?ref=e63a8a0e5cdf7bb797159c92ba15961557fe9bd2",
+      "patch": "@@ -1,4 +1,7 @@\n # Copyright (c) Kyutai, all rights reserved.\n+# Copyright (c) Meta Platforms, Inc. and affiliates.\n+# All rights reserved.\n+#\n # This source code is licensed under the license found in the\n # LICENSE file in the root directory of this source tree.\n "
+    },
+    {
+      "sha": "6f5a5c4015a41961bbd1ea714e1c51cc0614b31d",
+      "filename": "src/audioseal/libs/moshi/modules/resample.py",
+      "status": "modified",
+      "additions": 3,
+      "deletions": 0,
+      "changes": 3,
+      "blob_url": "https://github.com/facebookresearch/audioseal/blob/e63a8a0e5cdf7bb797159c92ba15961557fe9bd2/src%2Faudioseal%2Flibs%2Fmoshi%2Fmodules%2Fresample.py",
+      "raw_url": "https://github.com/facebookresearch/audioseal/raw/e63a8a0e5cdf7bb797159c92ba15961557fe9bd2/src%2Faudioseal%2Flibs%2Fmoshi%2Fmodules%2Fresample.py",
+      "contents_url": "https://api.github.com/repos/facebookresearch/audioseal/contents/src%2Faudioseal%2Flibs%2Fmoshi%2Fmodules%2Fresample.py?ref=e63a8a0e5cdf7bb797159c92ba15961557fe9bd2",
+      "patch": "@@ -1,4 +1,7 @@\n # Copyright (c) Kyutai, all rights reserved.\n+# Copyright (c) Meta Platforms, Inc. and affiliates.\n+# All rights reserved.\n+#\n # This source code is licensed under the license found in the\n # LICENSE file in the root directory of this source tree.\n "
+    },
+    {
+      "sha": "2cd84e5ebfa7c9ad69e1610cc80333006cc67adf",
+      "filename": "src/audioseal/libs/moshi/modules/rope.py",
+      "status": "modified",
+      "additions": 3,
+      "deletions": 0,
+      "changes": 3,
+      "blob_url": "https://github.com/facebookresearch/audioseal/blob/e63a8a0e5cdf7bb797159c92ba15961557fe9bd2/src%2Faudioseal%2Flibs%2Fmoshi%2Fmodules%2Frope.py",
+      "raw_url": "https://github.com/facebookresearch/audioseal/raw/e63a8a0e5cdf7bb797159c92ba15961557fe9bd2/src%2Faudioseal%2Flibs%2Fmoshi%2Fmodules%2Frope.py",
+      "contents_url": "https://api.github.com/repos/facebookresearch/audioseal/contents/src%2Faudioseal%2Flibs%2Fmoshi%2Fmodules%2Frope.py?ref=e63a8a0e5cdf7bb797159c92ba15961557fe9bd2",
+      "patch": "@@ -1,4 +1,7 @@\n # Copyright (c) Kyutai, all rights reserved.\n+# Copyright (c) Meta Platforms, Inc. and affiliates.\n+# All rights reserved.\n+#\n # This source code is licensed under the license found in the\n # LICENSE file in the root directory of this source tree.\n "
+    },
+    {
+      "sha": "e49c28acd287855724fe8d150c2014f298948d5a",
+      "filename": "src/audioseal/libs/moshi/modules/transformer.py",
+      "status": "modified",
+      "additions": 3,
+      "deletions": 0,
+      "changes": 3,
+      "blob_url": "https://github.com/facebookresearch/audioseal/blob/e63a8a0e5cdf7bb797159c92ba15961557fe9bd2/src%2Faudioseal%2Flibs%2Fmoshi%2Fmodules%2Ftransformer.py",
+      "raw_url": "https://github.com/facebookresearch/audioseal/raw/e63a8a0e5cdf7bb797159c92ba15961557fe9bd2/src%2Faudioseal%2Flibs%2Fmoshi%2Fmodules%2Ftransformer.py",
+      "contents_url": "https://api.github.com/repos/facebookresearch/audioseal/contents/src%2Faudioseal%2Flibs%2Fmoshi%2Fmodules%2Ftransformer.py?ref=e63a8a0e5cdf7bb797159c92ba15961557fe9bd2",
+      "patch": "@@ -1,4 +1,7 @@\n # Copyright (c) Kyutai, all rights reserved.\n+# Copyright (c) Meta Platforms, Inc. and affiliates.\n+# All rights reserved.\n+#\n # This source code is licensed under the license found in the\n # LICENSE file in the root directory of this source tree.\n "
+    },
+    {
+      "sha": "a9bfe7da982269ee29b75ec5feeda9dfd77dbe90",
+      "filename": "src/audioseal/libs/moshi/utils/compile.py",
+      "status": "modified",
+      "additions": 3,
+      "deletions": 0,
+      "changes": 3,
+      "blob_url": "https://github.com/facebookresearch/audioseal/blob/e63a8a0e5cdf7bb797159c92ba15961557fe9bd2/src%2Faudioseal%2Flibs%2Fmoshi%2Futils%2Fcompile.py",
+      "raw_url": "https://github.com/facebookresearch/audioseal/raw/e63a8a0e5cdf7bb797159c92ba15961557fe9bd2/src%2Faudioseal%2Flibs%2Fmoshi%2Futils%2Fcompile.py",
+      "contents_url": "https://api.github.com/repos/facebookresearch/audioseal/contents/src%2Faudioseal%2Flibs%2Fmoshi%2Futils%2Fcompile.py?ref=e63a8a0e5cdf7bb797159c92ba15961557fe9bd2",
+      "patch": "@@ -1,4 +1,7 @@\n # Copyright (c) Kyutai, all rights reserved.\n+# Copyright (c) Meta Platforms, Inc. and affiliates.\n+# All rights reserved.\n+#\n # This source code is licensed under the license found in the\n # LICENSE file in the root directory of this source tree.\n "
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+conditions:
+  - {id: clean, family: clean}
+  - {id: mp3_128, family: mp3, bitrate_kbps: 128}
+  - {id: mp3_64, family: mp3, bitrate_kbps: 64}
+  - {id: noise_30, family: noise, snr_db: 30}
+  - {id: noise_20, family: noise, snr_db: 20}
+  - {id: resample_12000, family: resample, intermediate_sr: 12000}
+  - {id: resample_8000, family: resample, intermediate_sr: 8000}
+  - {id: pitch_minus2, family: pitch, semitones: -2}
+  - {id: pitch_plus2, family: pitch, semitones: 2}
+  - {id: stretch_09, family: stretch, rate: 0.9}
+  - {id: stretch_11, family: stretch, rate: 1.1}
+  - {id: crop_10, family: crop, fraction: 0.1}
+  - {id: crop_25, family: crop, fraction: 0.25}

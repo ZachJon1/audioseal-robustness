@@ -1,0 +1,22 @@
+{
+  "source_revision": "e63a8a0e5cdf7bb797159c92ba15961557fe9bd2",
+  "model_revision": "3c19eba53390776cf2cc9ed5f6c9ac67ce72ecba",
+  "generator": {
+    "url": "https://huggingface.co/facebook/audioseal/resolve/3c19eba53390776cf2cc9ed5f6c9ac67ce72ecba/generator_base.pth",
+    "path": "checkpoints/generator_base.pth",
+    "bytes": 58805980,
+    "sha256": "7a845b5fbe9364a63a3909d8ab3fe064d13a76ae4c2e983573e08c69b7b51748"
+  },
+  "detector": {
+    "url": "https://huggingface.co/facebook/audioseal/resolve/3c19eba53390776cf2cc9ed5f6c9ac67ce72ecba/detector_base.pth",
+    "path": "checkpoints/detector_base.pth",
+    "bytes": 34667641,
+    "sha256": "8a78e8a83584113523e161fc599fcab10fd0e94c04d2eb9d2fa1e9ec91ab69d9"
+  },
+  "example": {
+    "url": "https://raw.githubusercontent.com/facebookresearch/audioseal/e63a8a0e5cdf7bb797159c92ba15961557fe9bd2/test.wav",
+    "path": "data/raw/official_test.wav",
+    "bytes": 334496,
+    "sha256": "d4c1fdbe920c2efeb525dcc067ed01c7feaa07ded719a98bd7e62a8f277cd0cd"
+  }
+}

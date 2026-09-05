@@ -1,0 +1,35 @@
+/home/zak/docker_shared/audio_watermarking/audioseal-robustness/.venv/lib/python3.11/site-packages/torch/nn/utils/weight_norm.py:143: FutureWarning: `torch.nn.utils.weight_norm` is deprecated in favor of `torch.nn.utils.parametrizations.weight_norm`.
+  WeightNorm.apply(module, name, dim)
+{
+  "status": "passed",
+  "seed": 20260905,
+  "source": "official AudioSeal test.wav",
+  "sample_rate": 16000,
+  "tensor_shape": [
+    1,
+    1,
+    121344
+  ],
+  "duration_seconds": 7.584,
+  "expected_message": "0011001101011010",
+  "positive": {
+    "detection_score": 1.0,
+    "mean_frame_probability": 0.9999809265136719,
+    "detected": 1,
+    "recovered_message": "0011001101011010",
+    "detect_runtime_ms": 160.84177000448108
+  },
+  "negative": {
+    "detection_score": 9.065137419383973e-05,
+    "mean_frame_probability": 0.0077002462930977345,
+    "detected": 0,
+    "recovered_message": "0100111110100100",
+    "detect_runtime_ms": 99.43884296808392
+  },
+  "bit_errors": 0,
+  "bit_accuracy": 1.0,
+  "embed_runtime_ms": 1174.0345329744741,
+  "watermark_snr_db": 28.639854854574928,
+  "peak": 0.6740269660949707,
+  "model_load_runtime_ms": 226.39475297182798
+}
