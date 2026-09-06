@@ -1,5 +1,6 @@
 """Final reproducibility, provenance, result and report-claims audit."""
 import csv
+import argparse
 import json
 import re
 import subprocess
@@ -15,6 +16,11 @@ from audio_wm_eval.experiment import read_manifest, validate_rows
 from audio_wm_eval.reporting import load_raw, aggregate_results
 
 def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--output', type=Path, default=ROOT/'outputs/claims_audit.json')
+    args = parser.parse_args()
+    if args.output.exists():
+        raise FileExistsError(f'Refusing to overwrite {args.output}; choose a fresh --output')
     checks=[]
     def check(name,passed,details=''):
         checks.append({'name':name,'passed':bool(passed),'details':details})
@@ -56,7 +62,10 @@ def main():
     panel=(ROOT/'reports/panel_summary.md').read_text()
     check('panel_one_page_word_budget',len(panel.split())<=550,{'words':len(panel.split()),'limit':550})
     check('report_scope_disclosed',all(s in technical.lower() for s in ('preliminary','24','12','false positives','no human listening','speaker','2,000','16-bit')))
-    check('report_failures_disclosed','setuptools' in technical and 'STATUS.md' in technical)
+    smoke_failures = list((ROOT/'outputs').glob('smoke_test_failed_*.json'))
+    check('report_failures_disclosed','STATUS.md' in technical and
+          (not smoke_failures or 'smoke attempt' in technical.lower()),
+          {'recorded_smoke_failures':len(smoke_failures)})
     check('required_reports_figures',all((ROOT/'outputs/figures'/f).is_file() for f in ('detection_rates.png','message_recovery.png','score_distributions.png','quality_vs_detection.png')))
     report={'status':'passed' if all(c['passed'] for c in checks) else 'failed',
             'checks':checks,'raw_sha256':sha256(ROOT/'outputs/raw_results.csv'),
@@ -65,7 +74,7 @@ def main():
             'limits':['One pretrained checkpoint pair; no training','24 audiobook speech clips; 12 dependent speaker clusters',
                       'Digital non-adaptive transformations only','No listening study; MP3 temporal alignment not verified',
                       'Replay establishes within-host repeatability for two clips, not bitwise cross-platform reproducibility']}
-    write_json(ROOT/'outputs/claims_audit.json',report)
+    write_json(args.output,report)
     print(json.dumps({'status':report['status'],'checks':len(checks),'failed':[c for c in checks if not c['passed']]},indent=2))
     if report['status']!='passed': raise SystemExit(1)
 

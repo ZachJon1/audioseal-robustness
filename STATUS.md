@@ -1,5 +1,7 @@
 # Project status
 
+**Current state: phases A–K complete.** Official smoke, 24-clip/624-row full experiment, 110 tests, 19-check claims audit, independent inference replay, and byte-identical CSV/figure regeneration passed. Main deliverables are reports/technical_report.md and reports/panel_summary.md. See the final entry below for remaining scientific limits.
+
 ## A — environment inspection complete
 
 - Workspace originally contains only the user's execution-plan Markdown and empty protected metadata directories. User files preserved; project is in a new subdirectory.
@@ -57,3 +59,38 @@
 - Viewed outputs/pilot/inspection.png across clean + all six families. Waveforms and spectra show expected bandwidth, duration and noise changes. This is objective visual/sample inspection; no human listening was performed or claimed.
 - Pilot observations retained: pitch errors; detection/message dissociation under stretching and cropping. These are experimental outcomes, not pipeline failures, and do not invalidate the complete run.
 - Estimated full runtime 361.6 s; first-clip full-run audio examples ~7.0 MB. Next exact action: `.venv/bin/python scripts/run_experiment.py --output-dir outputs` after source snapshot; then independent two-clip replay and raw-derived reporting.
+
+## H — full run passed
+
+- Command: `.venv/bin/python scripts/run_experiment.py --output-dir outputs > outputs/logs/full_run.log`.
+- Source snapshot: `b4f3de4a4f74b8742b201c9e0941cfe5166082fc`; actual source/config/manifest hashes in outputs/run_manifest.json. Source hash rechecked unchanged after the run. Git dirty entries at launch were only the newly opened run/commit logs.
+- Full validation: 624 expected and actual rows (24 × 13 × 2), zero failed rows, 103.57 s wall time. Raw SHA256 `004acea9ed531fa9ea5f40d17ade380c5b0c7e656454df50eef8fce67a225d41`. All rows saved before aggregation; no clips replaced or hidden.
+- Replay commands: `run_experiment.py --limit 2 --output-dir outputs/reproducibility --save-audio none`; `compare_runs.py --reference outputs/pilot/raw_results.csv --candidate outputs/reproducibility/raw_results.csv --output outputs/reproducibility/comparison.json` — passed for all 52 rows, exact sample hashes and scientific values, zero difference. Wall-clock timing excluded.
+- Cached-archive repeat: `prepare_data.py --archive data/raw/test-clean.tar.gz` — identical selected clips, expected messages, manifest and audio bytes. Fresh audit report retained; no download.
+- Verification: latest full suite `.venv/bin/python -m pytest -q --junitxml=outputs/tests_final.xml` — 110 passed, 0 skipped/failed; dependency consistency check passed. Evidence outputs/final_validation.json and outputs/reproducibility_audit.json.
+- Next exact action (I/J): `.venv/bin/python scripts/generate_report.py --raw outputs/raw_results.csv --output-dir outputs --reports-dir reports`, then inspect plots/reports and perform final claims audit.
+
+## I — tables and figures passed; J — reports completed
+
+- Commands: `generate_report.py --raw outputs/raw_results.csv --output-dir outputs --reports-dir reports` (logs generate_report.log and generate_report_final.log).
+- Created summary_results.csv, paired_differences.csv, dataset_composition.csv, header-only failures.csv, aggregation_metadata.json, and four figures from raw measurements using 2,000 clip bootstrap resamples. Reports include technical_report.md and a <=550-word panel_summary.md.
+- Viewed all four figures. Added explicit n=24 labels, clarified tensor-preparation timing, and separated raw-derived measurements from provenance-derived configuration tables. Added raw-derived detection/recovery dissociation examples. Preserved the first report rendering in outputs/report_draft_01; no raw data, results or failed command logs were changed.
+- Initial report generation emitted a Matplotlib cache-location warning and used /tmp; updated report CLI to use project-local cache before imports. Final rendering succeeded without that warning. Numerical aggregation/inference code remained unchanged.
+- Main findings: clean/MP3/both resampling conditions 24/24 detections and exact recovery. Pitch ±2 st: 0/24 detections. Noise20 dB TPR 8/24; stretch0.9 TPR2/24; stretch1.1 TPR4/24 despite 24/24 exact payloads; crop25 TPR17/24 but exact1/24. No false positives in any condition's 24 matched controls. Mean watermark SNR27.60 dB; no clipping. Intervals/denominators and cautions are in reports.
+- Independent read-only scientific audit verified checkpoint configs exactly match official 16-bit non-streaming model cards, paired RNG policy, unconditional positive payload scoring, clip bootstrap, and runtime boundaries. No material validity defect found.
+
+## K — final tests and claims audit passed; artifact replay in progress
+
+- Command after final report edits: `.venv/bin/python -m pytest -q --junitxml=outputs/tests_after_reports.xml > outputs/logs/tests_after_reports.log` — 110 passed in6.18 s, 0 failed/skipped. 14 upstream Matplotlib/pyparsing deprecation warnings retained.
+- Command: `.venv/bin/python scripts/audit_project.py` — 19/19 checks passed (outputs/claims_audit.json), including full624-row completeness, hashes/provenance, all recomputed summary cells, exact pilot/full sample hashes/endpoints, independent replay, noiseSNR, report scope/failure disclosure, panel length and Git exclusions. Pandas emitted a future warning for None/NaN equality in this pinned-version check; equality checks passed.
+- Next exact action: complete fresh raw-only regeneration into outputs/reproduced_summary and reports/reproduced; compare CSV/figure bytes; record final source/artifact provenance and commit deliverables.
+
+## K — complete; final handoff
+
+- Fresh report regeneration: `generate_report.py --raw outputs/raw_results.csv --output-dir outputs/reproduced_summary --reports-dir reports/reproduced` — passed. All four CSVs and all four PNG figures were byte-identical to the canonical outputs; evidence outputs/artifact_reproducibility.json. Panel summary is 395 words.
+- Added `scripts/run_tests.py` so a new execution can recreate machine-readable test evidence using documented commands. Verification: `run_tests.py --output-dir outputs/final_test_confirmation` — 110 passed, no failures/skips, in 6.15 s. Logs/XML/JSON retained in that directory.
+- README now distinguishes a separate-checkout end-to-end reproduction (preserving the bundled reference outputs first) from reruns using this workspace's verified local data. No additional download was needed. The final audit permits a fresh output path and checks disclosure of smoke failures only when such failures actually occurred, so a successful first smoke in a fresh reproduction is not rejected.
+- Final audit command: `audit_project.py --output outputs/claims_audit_final.json` — 19/19 checks passed; raw rows, model/data provenance, scientific summaries, replay, figures, scope and failure disclosure verified. Original audit remains preserved. Reporting provenance is outputs/reporting_provenance.json; inference provenance still identifies the exact full-run source snapshot.
+- Commands for completion: `git diff --check`; staged-file exclusion check for audio/data/checkpoint/cache/environment paths; `git add .`; local commit of deliverables; `git status --short`. No user files outside the new project were modified; no global Python/system packages were installed.
+- Remaining scientific limits: one official pretrained checkpoint pair; 24 audiobook utterances/12 speakers with speaker dependence; fixed threshold and isolated digital transformations; only a two-clip inference replay for within-host repeatability (all raw-derived summary/figure artifacts replayed); no human listening; no cross-platform bitwise reproducibility claim. Zero observed FPR is not evidence of zero population FPR. IEEE paper full text unavailable; source notes identify the verified official benchmark documentation used instead.
+- **Next exact action: none required for phases A–K.** Optional new runs, broader evaluation and listening checks are documented in README/reports and are outside this initial baseline.

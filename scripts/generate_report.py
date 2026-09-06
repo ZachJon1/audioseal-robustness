@@ -7,6 +7,8 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
+from audio_wm_eval.common import configure_runtime
+configure_runtime()
 from audio_wm_eval.reporting import generate_report
 
 

@@ -224,6 +224,7 @@ def _figures(raw: pd.DataFrame, summary: pd.DataFrame, output: Path) -> None:
 
     plt.rcParams.update({"figure.dpi": 140, "font.size": 9, "axes.spines.top": False, "axes.spines.right": False})
     labels = [LABELS.get(c, c) for c in summary.condition]
+    sample_note = f"n={raw.clip_id.nunique()} clips per condition; failed rows={int((raw.status != 'ok').sum())}"
     x = np.arange(len(summary))
     fig, ax = plt.subplots(figsize=(11, 4.6))
     for metric, offset, color, label in (("tpr", -.1, "#126e82", "TPR"), ("fpr", .1, "#b13e53", "FPR")):
@@ -233,7 +234,7 @@ def _figures(raw: pd.DataFrame, summary: pd.DataFrame, output: Path) -> None:
         ax.errorbar(x + offset, mean, yerr=[np.maximum(0, mean - low), np.maximum(0, high - mean)],
                     fmt="o", capsize=3, color=color, label=label)
     ax.set(xticks=x, xticklabels=labels, ylim=(-.05, 1.05), ylabel="Measured clip proportion",
-           title="AudioSeal detection: clip-bootstrap 95% intervals")
+           title="AudioSeal detection: clip-bootstrap 95% intervals\n" + sample_note)
     ax.tick_params(axis="x", rotation=45)
     ax.legend(loc="best")
     fig.tight_layout()
@@ -248,7 +249,7 @@ def _figures(raw: pd.DataFrame, summary: pd.DataFrame, output: Path) -> None:
         ax.errorbar(x, mean, yerr=[np.maximum(0, mean - low), np.maximum(0, high - mean)], fmt="o", color="#126e82", capsize=3)
         ax.set(xticks=x, xticklabels=labels, ylabel=label, ylim=(-.05, 1.05), title=label + " (positive clips)")
         ax.tick_params(axis="x", rotation=70)
-    fig.suptitle("Recovery scored on all successfully processed positive clips, including missed detections")
+    fig.suptitle("Recovery scored on all successfully processed positive clips, including missed detections\n" + sample_note)
     fig.tight_layout()
     fig.savefig(output / "message_recovery.png")
     plt.close(fig)
@@ -270,7 +271,7 @@ def _figures(raw: pd.DataFrame, summary: pd.DataFrame, output: Path) -> None:
     if len(thresholds) == 1:
         ax.axhline(thresholds[0], color="gray", linestyle="--", label="Prespecified clip threshold")
     ax.set(xticks=x, xticklabels=labels, ylabel="Fraction of frames declared watermarked", ylim=(-.05, 1.05),
-           title="Detection-score distributions across clips")
+           title="Detection-score distributions across clips\n" + sample_note)
     ax.tick_params(axis="x", rotation=45)
     ax.legend()
     fig.tight_layout()
@@ -288,7 +289,7 @@ def _figures(raw: pd.DataFrame, summary: pd.DataFrame, output: Path) -> None:
     else:
         ax.text(.5, .5, "No applicable finite sample-aligned SNR values", ha="center", transform=ax.transAxes)
     ax.set(xlabel="Mean positive-output sample-aligned SNR vs original speech (dB)",
-           ylabel="TPR", ylim=(-.05, 1.12), title="Applicable aligned conditions only; signal quality ≠ listening quality")
+           ylabel="TPR", ylim=(-.05, 1.12), title="Applicable aligned conditions only; signal quality ≠ listening quality\n" + sample_note)
     fig.tight_layout()
     fig.savefig(output / "quality_vs_detection.png")
     plt.close(fig)
@@ -500,7 +501,7 @@ def _write_reports(raw: pd.DataFrame, summary: pd.DataFrame, paired: pd.DataFram
     runtimes = (
         f"Embedding median {_number(once.embed_runtime_ms.median())} ms/clip ({len(once)} distinct positive clips); "
         f"detection median {_number(pd.concat([positive_ok, negative_ok]).detect_runtime_ms.median())} ms per successful branch-condition inference. "
-        "Per-row embedding/detection timing excludes model loading and the dedicated model warmup. "
+        "Per-row embedding/detection timing excludes model loading, tensor preparation and the dedicated model warmup. "
         "Attack timing includes codec I/O and first library imports; cache effects and fixed positive-before-negative order can affect timing. "
         "Quality calculations and example-file writes contribute only to total run wall time. These are host-specific measurements, not a cross-hardware benchmark."
     )
@@ -509,6 +510,13 @@ def _write_reports(raw: pd.DataFrame, summary: pd.DataFrame, paired: pd.DataFram
         baseline_stats.update(_summary(once[column], column, SEED, metadata["bootstrap_resamples"]))
     negative_aligned = negative_ok.quality_snr_db.notna().sum()
     positive_aligned = positive_ok.quality_snr_db.notna().sum()
+    endpoint_examples = []
+    for example_condition in ("stretch_11", "crop_25"):
+        example = summary.loc[summary.condition == example_condition]
+        if len(example):
+            row = example.iloc[0]
+            endpoint_examples.append(f"{LABELS.get(example_condition, example_condition)} had TPR {_pct(row.tpr_mean)} and exact message recovery {_pct(row.exact_recovery_mean)}")
+    endpoint_text = ("Presence detection and payload recovery differed: " + "; ".join(endpoint_examples) + ". These endpoints should not be used interchangeably.") if endpoint_examples else ""
     technical = f"""# Preliminary AudioSeal robustness evaluation
 
 This reproducible baseline evaluates one official pretrained AudioSeal generator/detector pair on {n} public speech clips from {speakers} speakers. It is a small, controlled inference experiment, with no training or fine-tuning. It does not establish general audio-watermarking robustness, security, or perceptual transparency.
@@ -584,6 +592,8 @@ There were {failures} failed inference/attack rows. [failures.csv]({report_rel}/
 
 ## Interpretation and limits
 
+{endpoint_text}
+
 {attack_text} Differences are descriptive and specific to this speech subset, checkpoint pair, decision threshold, and implemented attack settings. Potential explanations involving codec suppression, resampling bandwidth, pitch/frequency changes, temporal warping, or loss of watermark-bearing segments are hypotheses, not identified mechanisms. Matched controls estimate false positives under the same transformations but cannot characterize rare false positives from {n} controls per condition or a general population. Overlapping conditions reuse the same clips, so {summary.shape[0]} conditions do not create {summary.shape[0]} independent control datasets.
 
 The deterministic selection is not a random sample of all speech. Audiobook speech excludes many languages, recording conditions, music, generated speech, long-form audio, replay channels, adaptive attacks, compound transformations, watermark removal optimization, model shifts, and training-time attacks. This evaluation does not assess adversarial security. Before operational use, a larger speaker-disjoint evaluation, threshold calibration on separate data, broader audio coverage, perceptual listening, and targeted threat-model testing would be needed.
@@ -592,7 +602,7 @@ The deterministic selection is not a random sample of all speech. Audiobook spee
 
 - Raw input: `{metadata['raw_path']}`; SHA-256 `{metadata['raw_sha256']}`.
 - Run ID: `{raw.run_id.iloc[0]}`; recorded raw Git commit(s): `{', '.join(sorted(raw.git_commit.unique())) or 'not recorded'}`.
-- Grid: {n} clips × {summary.shape[0]} conditions × 2 matched branches = {len(raw)} rows. All tables and figures in this report were generated from raw per-clip rows, with no manual adjustment of measurements.
+- Grid: {n} clips × {summary.shape[0]} conditions × 2 matched branches = {len(raw)} rows. All measurement summary tables and figures were generated from raw per-clip rows, with no manual adjustment of measurements; setup and configuration tables use saved provenance.
 - Environment: [`outputs/environment.json`](../outputs/environment.json), resolved dependency lock and provenance records. Environment file was {'present' if environment else 'not present'} when the report was generated; it is the authoritative hardware/software record.
 - Dataset composition: [dataset_composition.csv]({report_rel}/dataset_composition.csv); paired contrasts: [paired_differences.csv]({report_rel}/paired_differences.csv); aggregation metadata: [aggregation_metadata.json]({report_rel}/aggregation_metadata.json).
 - Recreate aggregates with `.venv/bin/python scripts/generate_report.py --raw {metadata['raw_path']} --output-dir outputs/reproduced_summary --reports-dir reports/reproduced --resamples {metadata['bootstrap_resamples']}`. Output directories must not contain existing generated artifacts.

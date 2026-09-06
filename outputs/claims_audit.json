@@ -1,0 +1,146 @@
+{
+  "status": "passed",
+  "checks": [
+    {
+      "name": "complete_full_grid",
+      "passed": true,
+      "details": {
+        "expected_rows": 624,
+        "actual_rows": 624,
+        "failed_rows": 0,
+        "status": "passed"
+      }
+    },
+    {
+      "name": "24_clips_12_speakers",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "all_processed_hashes",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "official_checkpoint_hashes",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "official_checkpoint_urls",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "dependency_lock_unchanged",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "official_audioseal_package",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "run_manifest_matches_data",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "summaries_recomputed_from_raw",
+      "passed": true,
+      "details": "Every summary cell checked against fresh 2000-resample computation"
+    },
+    {
+      "name": "independent_process_replay",
+      "passed": true,
+      "details": {
+        "status": "passed",
+        "rows_compared": 52,
+        "reference_sha256": "9e6572f39d5df80421682ad86611d01faa8bd13e347126e9b0fd888f9cfd1328",
+        "candidate_sha256": "2a7b9cc2c983f4d6f72bfb14e039747927cf796bebefc352ac3c98a14aedbfe3",
+        "excluded_fields": [
+          "attack_runtime_ms",
+          "code_sha256",
+          "detect_runtime_ms",
+          "embed_runtime_ms",
+          "git_commit",
+          "run_id"
+        ],
+        "numeric_tolerance": {
+          "rtol": 1e-07,
+          "atol": 1e-07
+        },
+        "max_tolerated_difference": 0.0,
+        "failures": []
+      }
+    },
+    {
+      "name": "pilot_and_full_sample_hashes",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "pilot_and_full_scientific_endpoints",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "attack_target_snr",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "no_binary_data_or_caches_in_git",
+      "passed": true,
+      "details": []
+    },
+    {
+      "name": "full_test_suite",
+      "passed": true,
+      "details": {
+        "status": "passed",
+        "command": ".venv/bin/python -m pytest -q --junitxml=outputs/tests_final.xml",
+        "tests_passed": 110,
+        "tests_failed": 0,
+        "tests_skipped": 0,
+        "summary": "Full suite; upstream matplotlib/pyparsing deprecation warnings retained in log. Dependency check passed.",
+        "log": "outputs/logs/tests_final.log",
+        "junit": "outputs/tests_final.xml"
+      }
+    },
+    {
+      "name": "panel_one_page_word_budget",
+      "passed": true,
+      "details": {
+        "words": 395,
+        "limit": 550
+      }
+    },
+    {
+      "name": "report_scope_disclosed",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "report_failures_disclosed",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "required_reports_figures",
+      "passed": true,
+      "details": ""
+    }
+  ],
+  "raw_sha256": "004acea9ed531fa9ea5f40d17ade380c5b0c7e656454df50eef8fce67a225d41",
+  "technical_report_sha256": "4cd65dc6202ee5d2b21fdb6142d5cea343a609a37cc6c7a8a239b942badcaa1d",
+  "panel_summary_sha256": "8919387b1b9c61d37889e32e210d2fd53ebe08009ac7d1510e94f755ff30d1ff",
+  "limits": [
+    "One pretrained checkpoint pair; no training",
+    "24 audiobook speech clips; 12 dependent speaker clusters",
+    "Digital non-adaptive transformations only",
+    "No listening study; MP3 temporal alignment not verified",
+    "Replay establishes within-host repeatability for two clips, not bitwise cross-platform reproducibility"
+  ]
+}

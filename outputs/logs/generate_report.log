@@ -1,0 +1,18 @@
+/home/zak/.config/matplotlib is not a writable directory
+Matplotlib created a temporary cache directory at /tmp/matplotlib-82ffyzk6 because there was an issue with the default path (/home/zak/.config/matplotlib); it is highly recommended to set the MPLCONFIGDIR environment variable to a writable directory, in particular to speed up the import of Matplotlib and to better support multiprocessing.
+{
+  "raw_path": "outputs/raw_results.csv",
+  "raw_sha256": "004acea9ed531fa9ea5f40d17ade380c5b0c7e656454df50eef8fce67a225d41",
+  "n_raw_rows": 624,
+  "n_clips": 24,
+  "n_speakers": 12,
+  "n_conditions": 13,
+  "n_failed_rows": 0,
+  "bootstrap_seed": 20260905,
+  "bootstrap_resamples": 2000,
+  "bootstrap_unit": "clip",
+  "bootstrap_method": "95% percentile interval; paired clip differences for attack-minus-clean",
+  "rate_denominator": "successfully measured clips; failed and missing counts explicit",
+  "zero_rate_caveat": "A [0,0] empirical bootstrap interval does not establish zero population FPR.",
+  "quality_missing": "Inapplicable/unavailable metrics are NA, never zero."
+}

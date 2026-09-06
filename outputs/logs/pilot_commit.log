@@ -1,0 +1,21 @@
+[master b4f3de4] Record inspected pilot and deterministic replay gates
+ 22 files changed, 1256 insertions(+), 16 deletions(-)
+ create mode 100644 outputs/data_preparation_cf64a1a5f7b2.json
+ create mode 100644 outputs/logs/compare_runs.log
+ create mode 100644 outputs/logs/data_reproducibility.log
+ create mode 100644 outputs/logs/initial_commit.log
+ create mode 100644 outputs/logs/inspect_pilot.log
+ create mode 100644 outputs/logs/pilot.log
+ create mode 100644 outputs/logs/reproducibility.log
+ create mode 100644 outputs/logs/tests_reporting_audit.log
+ create mode 100644 outputs/pilot/inspection.json
+ create mode 100644 outputs/pilot/inspection.png
+ create mode 100644 outputs/pilot/raw_results.csv
+ create mode 100644 outputs/pilot/run_manifest.json
+ create mode 100644 outputs/pilot/validation.json
+ create mode 100644 outputs/reproducibility/comparison.json
+ create mode 100644 outputs/reproducibility/raw_results.csv
+ create mode 100644 outputs/reproducibility/run_manifest.json
+ create mode 100644 outputs/reproducibility/validation.json
+ create mode 100644 outputs/reproducibility_audit.json
+ create mode 100644 scripts/audit_project.py

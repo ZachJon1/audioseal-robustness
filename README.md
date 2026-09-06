@@ -15,6 +15,17 @@ python3.11 -m venv .venv
 
 If Python 3.11 is absent, `scripts/setup.sh` installs pinned uv and managed Python inside this project. Initial compressed transfers including dataset and checkpoints are approximately 0.9 GB total; unpacked local storage is larger. No system installation is needed. Inspect the script before running it. Downloads, managed Python, virtual environment, caches, checkpoints and generated audio are ignored by Git.
 
+This repository includes the recorded results. For an entirely new execution **in a separate checkout**, first preserve that reference evidence; the commands below require previously unused output paths:
+
+```bash
+mkdir reference-run
+mv outputs reports reference-run/
+mkdir outputs reports
+cp reference-run/reports/source_notes.md reports/
+```
+
+Then execute the original smoke-to-pilot sequence. The smoke gate will run anew before the dataset download. On this existing working copy, the alternative commands below reuse verified inputs without moving evidence.
+
 ```bash
 bash scripts/setup.sh
 .venv/bin/python scripts/fetch_models.py
@@ -35,10 +46,21 @@ Inspect `outputs/pilot/raw_results.csv`, `validation.json`, `inspection.json`, `
 .venv/bin/python scripts/generate_report.py --raw outputs/raw_results.csv --output-dir outputs --reports-dir reports
 .venv/bin/python scripts/run_experiment.py --limit 2 --output-dir outputs/reproducibility --save-audio none
 .venv/bin/python scripts/compare_runs.py --reference outputs/pilot/raw_results.csv --candidate outputs/reproducibility/raw_results.csv --output outputs/reproducibility/comparison.json
-.venv/bin/python -m pytest -q
+.venv/bin/python scripts/run_tests.py
+.venv/bin/python scripts/audit_project.py
 ```
 
-Existing results are never silently overwritten. In this completed workspace, use a fresh `--output-dir` for reruns and `--reports-dir` for regenerated reports. Smoke/environment/inspection scripts refuse existing evidence; verify the provided artifacts or run them in a fresh checkout. Model fetch verifies existing hashes; data preparation verifies existing files and regenerates the identical manifest without overwriting it. Scripts insert `src` in the import path; interactive Python requires `PYTHONPATH=src` or an editable project installation.
+The completed outputs are [technical report](reports/technical_report.md), [panel summary](reports/panel_summary.md), [raw results](outputs/raw_results.csv), [summary results](outputs/summary_results.csv), and [claims audit](outputs/claims_audit.json). The final audit recomputes every summary cell, validates the entire grid and provenance, and checks replay evidence. Its command is `.venv/bin/python scripts/audit_project.py`; to repeat it without replacing evidence, use `--output outputs/another_claims_audit.json`.
+
+Existing results are never silently overwritten. In this completed workspace, use fresh output directories to reproduce inference and summaries from the verified local inputs:
+
+```bash
+.venv/bin/python scripts/run_experiment.py --output-dir outputs/another_run --save-audio none
+.venv/bin/python scripts/generate_report.py --raw outputs/raw_results.csv --output-dir outputs/another_summary --reports-dir reports/another_summary
+.venv/bin/python scripts/run_tests.py --output-dir outputs/another_test_run
+```
+
+Smoke/environment/inspection scripts refuse existing evidence; use the separate-checkout sequence above for a new end-to-end gated run. Model fetch verifies existing hashes; data preparation verifies existing files and regenerates the identical manifest without overwriting it. Scripts insert `src` in the import path; interactive Python requires `PYTHONPATH=src` or an editable project installation.
 
 ## Design and metric definitions
 

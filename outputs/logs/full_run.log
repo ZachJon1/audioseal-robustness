@@ -1,0 +1,27 @@
+/home/zak/docker_shared/audio_watermarking/audioseal-robustness/.venv/lib/python3.11/site-packages/torch/nn/utils/weight_norm.py:143: FutureWarning: `torch.nn.utils.weight_norm` is deprecated in favor of `torch.nn.utils.parametrizations.weight_norm`.
+  WeightNorm.apply(module, name, dim)
+clip 1/24 2961-961-0021: 0 failed rows so far
+clip 2/24 672-122797-0044: 0 failed rows so far
+clip 3/24 4446-2275-0009: 0 failed rows so far
+clip 4/24 8455-210777-0039: 0 failed rows so far
+clip 5/24 61-70968-0021: 0 failed rows so far
+clip 6/24 1221-135767-0024: 0 failed rows so far
+clip 7/24 260-123286-0014: 0 failed rows so far
+clip 8/24 7729-102255-0025: 0 failed rows so far
+clip 9/24 8224-274384-0009: 0 failed rows so far
+clip 10/24 2830-3980-0065: 0 failed rows so far
+clip 11/24 7021-79740-0003: 0 failed rows so far
+clip 12/24 5105-28241-0003: 0 failed rows so far
+clip 13/24 2961-961-0011: 0 failed rows so far
+clip 14/24 672-122797-0000: 0 failed rows so far
+clip 15/24 4446-2273-0014: 0 failed rows so far
+clip 16/24 8455-210777-0020: 0 failed rows so far
+clip 17/24 61-70968-0036: 0 failed rows so far
+clip 18/24 1221-135767-0015: 0 failed rows so far
+clip 19/24 260-123440-0017: 0 failed rows so far
+clip 20/24 7729-102255-0014: 0 failed rows so far
+clip 21/24 8224-274384-0002: 0 failed rows so far
+clip 22/24 2830-3980-0068: 0 failed rows so far
+clip 23/24 7021-85628-0017: 0 failed rows so far
+clip 24/24 5105-28241-0019: 0 failed rows so far
+{'expected_rows': 624, 'actual_rows': 624, 'failed_rows': 0, 'status': 'passed', 'total_runtime_seconds': 103.56889235798735, 'model_load_runtime_ms': 236.56195506919175, 'raw_sha256': '004acea9ed531fa9ea5f40d17ade380c5b0c7e656454df50eef8fce67a225d41'}

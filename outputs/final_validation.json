@@ -1,0 +1,10 @@
+{
+  "status": "passed",
+  "command": ".venv/bin/python -m pytest -q --junitxml=outputs/tests_final.xml",
+  "tests_passed": 110,
+  "tests_failed": 0,
+  "tests_skipped": 0,
+  "summary": "Full suite; upstream matplotlib/pyparsing deprecation warnings retained in log. Dependency check passed.",
+  "log": "outputs/logs/tests_final.log",
+  "junit": "outputs/tests_final.xml"
+}

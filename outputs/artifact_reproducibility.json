@@ -1,0 +1,15 @@
+{
+  "status": "passed",
+  "checks": {
+    "summary_results.csv": true,
+    "paired_differences.csv": true,
+    "dataset_composition.csv": true,
+    "failures.csv": true,
+    "figures/detection_rates.png": true,
+    "figures/message_recovery.png": true,
+    "figures/quality_vs_detection.png": true,
+    "figures/score_distributions.png": true
+  },
+  "raw_sha256": "004acea9ed531fa9ea5f40d17ade380c5b0c7e656454df50eef8fce67a225d41",
+  "scope": "Fresh-process regeneration from the same raw file; every CSV and all four PNG figures are byte-identical."
+}

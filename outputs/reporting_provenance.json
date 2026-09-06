@@ -1,0 +1,19 @@
+{
+  "status": "passed",
+  "source_sha256": "d446a395910c48ef9e7af92baafba80b9085fcfcdad81036e2d742473523969f",
+  "raw_source_commit": "b4f3de4a4f74b8742b201c9e0941cfe5166082fc",
+  "report_generator_sha256": "32e947ded29b4228b374942e2c0eb8e82f534cefe71813ad904209c56d91a4d9",
+  "report_cli_sha256": "174c20683973e24aa81ce22b106895f0e43268b39bb4de4acd49a1b4abef327e",
+  "raw_sha256": "004acea9ed531fa9ea5f40d17ade380c5b0c7e656454df50eef8fce67a225d41",
+  "technical_report_sha256": "4cd65dc6202ee5d2b21fdb6142d5cea343a609a37cc6c7a8a239b942badcaa1d",
+  "panel_summary_sha256": "8919387b1b9c61d37889e32e210d2fd53ebe08009ac7d1510e94f755ff30d1ff",
+  "panel_words": 395,
+  "final_tests_after_reports": {
+    "tests": 110,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "final_test_log": "outputs/logs/tests_after_reports.log",
+  "notes": "Post-inference changes were report labels/wording and report cache setup only; aggregation formulas, adapter, attacks, configuration and raw measurements unchanged."
+}
