@@ -4,7 +4,7 @@ This reproducible baseline evaluates one official pretrained AudioSeal generator
 
 ## Results at a glance
 
-Clean TPR was 100.0% [100.0%, 100.0%]; FPR was 0.0% [0.0%, 0.0%]. Clean BER was 0.0% [0.0%, 0.0%] and exact 16-bit recovery was 100.0% [100.0%, 100.0%]. Among tested transformations, the lowest measured TPR was 0.0% for Pitch −2 st (BER 51.3%, exact recovery 0.0%). Ties are visible in the full table. A total of 0 of 624 attempted branch-condition rows failed. Rates below use successfully measured clips; attempted counts, missing metric counts, failed-positive-as-missed TPR, and negative-failure FPR bounds appear in the CSV.
+Clean TPR was 100.0% [100.0%, 100.0%]; FPR was 0.0% [0.0%, 0.0%]. Clean BER was 0.0% [0.0%, 0.0%] and exact 16-bit recovery was 100.0% [100.0%, 100.0%] (very preliminary results - larger corpus needed to really test it out). Among tested transformations, the lowest measured TPR was 0.0% for Pitch −2 st (BER 51.3%, exact recovery 0.0%). Ties are visible in the full table. A total of 0 of 624 attempted branch-condition rows failed. Rates below use successfully measured clips; attempted counts, missing metric counts, failed-positive-as-missed TPR, and negative-failure FPR bounds appear in the CSV.
 
 ## Sources and relation to prior work
 
